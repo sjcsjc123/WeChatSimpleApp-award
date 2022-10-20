@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -17,10 +18,26 @@ func main() {
 	r := gin.Default()
 	r.GET("/start", start)
 	r.GET("/reStart", reStart)
+	r.GET("/update", updateTotalAward)
 	err := r.Run(":4000")
 	if err != nil {
 		panic(err)
 	}
+}
+
+func updateTotalAward(c *gin.Context) {
+	query := c.Query("award")
+	award, err := strconv.ParseFloat(query, 64)
+	if err != nil {
+		c.JSON(200, gin.H{
+			"msg": "解析错误",
+		})
+		return
+	}
+	TotalAward = award
+	c.JSON(200, gin.H{
+		"msg": "更改成功",
+	})
 }
 
 func start(c *gin.Context) {
@@ -67,6 +84,14 @@ func start(c *gin.Context) {
 				"totalAward":  TotalAward,
 				"indexSelect": selectIndex,
 			})
+		case 1:
+			TotalAward = TotalAward + 0.52
+			fmt.Println("抽中了0.52块钱")
+			c.JSON(http.StatusOK, gin.H{
+				"msg":         "恭喜你抽中了0.52元红包",
+				"totalAward":  TotalAward,
+				"indexSelect": selectIndex,
+			})
 		case 2:
 			TotalAward = TotalAward + 21.21
 			fmt.Println("抽中了21.21块钱")
@@ -75,11 +100,27 @@ func start(c *gin.Context) {
 				"totalAward":  TotalAward,
 				"indexSelect": selectIndex,
 			})
+		case 3:
+			TotalAward = TotalAward + 1.31
+			fmt.Println("抽中了1.31块钱")
+			c.JSON(http.StatusOK, gin.H{
+				"msg":         "恭喜你抽中了1.31元红包",
+				"totalAward":  TotalAward,
+				"indexSelect": selectIndex,
+			})
 		case 4:
 			TotalAward = TotalAward + 13.14
 			fmt.Println("抽中了13.14块钱")
 			c.JSON(http.StatusOK, gin.H{
 				"msg":         "恭喜你抽中了13.14元红包",
+				"totalAward":  TotalAward,
+				"indexSelect": selectIndex,
+			})
+		case 5:
+			TotalAward = TotalAward + 2.12
+			fmt.Println("抽中了2.12块钱")
+			c.JSON(http.StatusOK, gin.H{
+				"msg":         "恭喜你抽中了2.12元红包",
 				"totalAward":  TotalAward,
 				"indexSelect": selectIndex,
 			})
@@ -105,6 +146,9 @@ func start(c *gin.Context) {
 //手动重设抽奖次数
 func reStart(c *gin.Context) {
 	Num = 10
+	c.JSON(200, gin.H{
+		"msg": "重设抽奖次数成功",
+	})
 }
 
 func updateNum() {
